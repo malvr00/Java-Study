@@ -23,7 +23,7 @@ public class Io3 {
 				br.skip(2); // ex) 12345 -> 출력 = 1, 4
 			} */
 			while(true) {
-				String s = br.readLine();
+				String s = br.readLine();	// 행 단위 출력
 				if(s == null)
 					break;
 				cnt++;
