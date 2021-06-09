@@ -2,4 +2,4 @@
 
 Review confusing issues
 
-## Io, Thread, Socket, Component, Graphics
+## Io, Thread, Socket, Component, Graphics, Tetris , DB
