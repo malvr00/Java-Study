@@ -19,10 +19,8 @@ public class TetrisPanel extends JPanel{
 	int [] blockX;			// Block 현재 'X'위치 저장
 	int [] blockY;			// Block 현재 'Y'위치 저장	
 	int blockpos;			// Block 회전 모양 지정
-	int xx,yy;
 	int score;				// Tetris 점수
 	int delayTime;			// Block 내려오는 속도 저장
-	int runGame;
 	boolean bGame;			// Game 진행여부
 	JLabel strScore;		// 점수
 	
