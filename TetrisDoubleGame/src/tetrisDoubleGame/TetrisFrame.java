@@ -18,6 +18,7 @@ public class TetrisFrame extends JFrame implements ActionListener{
 		colorType = new Color[8];		// 7종류 Block 별 색상 설정
 		
 		setLayout(null);
+		setColorType();
 		
 		leftPanel = new TetrisPanel(colorType);		// 1p 화면 객체 생성
 		leftPanel.setBounds(10,10,181,370);			// 1p 화면 나타낼 dnlc 크기 지정
