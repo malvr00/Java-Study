@@ -19,13 +19,13 @@ public class TetrisFrame extends JFrame implements ActionListener{
 		
 		setLayout(null);
 		
-		leftPanel = new TetirsPanel(colorType);		// 1p 화면 객체 생성
+		leftPanel = new TetrisPanel(colorType);		// 1p 화면 객체 생성
 		leftPanel.setBounds(10,10,181,370);			// 1p 화면 나타낼 dnlc 크기 지정
 		leftPanel.setBackground(Color.CYAN);
 		leftPanel.initForm();
 		getContentPane().add(leftPanel);
 		
-		rightPanel = new TetirsPanel(colorType);	// 2p 화면 객체 생성
+		rightPanel = new TetrisPanel(colorType);	// 2p 화면 객체 생성
 		rightPanel.setBounds(395, 10, 181, 370);	// 2p 화면 나타낼 dnlc 크기 지정
 		rightPanel.setBackground(Color.ORANGE);
 		rightPanel.initForm();
