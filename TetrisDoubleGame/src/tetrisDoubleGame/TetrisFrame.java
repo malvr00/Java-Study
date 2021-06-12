@@ -46,7 +46,8 @@ public class TetrisFrame extends JFrame implements ActionListener{
 		
 	} // 생성자 End
 	
-	public void setColorType() {					// Block 7종류 별 색상 설정
+  // Block 7종류 별 색상 설정
+	public void setColorType() {					
 		colorType[0] = Color.white;
 		colorType[1] = Color.cyan;
 		colorType[2] = Color.gray;
@@ -76,8 +77,9 @@ public class TetrisFrame extends JFrame implements ActionListener{
 			if(keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT || keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_UP) {
 				rightPanel.keyPressed(keyCode);
 			}
+		// 1p Key 설정
 			if(keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_W) {
-				rightPanel.keyPressed(keyCode);
+				leftPanel.keyPressed(keyCode);
 			}
 		}
 	}	// MyKeyHandle class end
