@@ -12,7 +12,7 @@ public class TetrisFrame extends JFrame implements ActionListener{
 	TetrisPanel rightPanel;			// 2p Tetris main
 	
 	Color[] colorType;
-	public void TetirsFrame() {}
+	public TetrisFrame() {}
 	public TetrisFrame(String title) {
 		super(title);
 		colorType = new Color[8];		// 7종류 Block 별 색상 설정
