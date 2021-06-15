@@ -8,21 +8,21 @@ import java.util.*;
 
 public class TetrisPanel extends JPanel{
 	Thread gameThread;
-	BufferedImage off;		// °¡¼ºÈ­¸é
-	Graphics offg;			// °¡»óÈ­¸é Graphics Context
+	BufferedImage off;		// ê°€ì„±í™”ë©´
+	Graphics offg;			// ê°€ìƒí™”ë©´ Graphics Context
 	
-	Random r;				// Block ¸ğ¾ç Random ÆĞÅÏ ·£´ıºÎ¿©
+	Random r;				// Block ëª¨ì–‘ Random íŒ¨í„´ ëœë¤ë¶€ì—¬
 	int [][] map;			// Tetris game map
-	Color[] colorType;		// 7 Á¾·ù Block
+	Color[] colorType;		// 7 ì¢…ë¥˜ Block
 	
-	int blockType;			// Block ¸ğ¾ç ÀúÀå
-	int [] blockX;			// Block ÇöÀç 'X'À§Ä¡ ÀúÀå
-	int [] blockY;			// Block ÇöÀç 'Y'À§Ä¡ ÀúÀå	
-	int blockpos;			// Block È¸Àü ¸ğ¾ç ÁöÁ¤
-	int score;				// Tetris Á¡¼ö
-	int delayTime;			// Block ³»·Á¿À´Â ¼Óµµ ÀúÀå
-	boolean bGame;			// Game ÁøÇà¿©ºÎ
-	JLabel strScore;		// Á¡¼ö
+	int blockType;			// Block ëª¨ì–‘ ì €ì¥
+	int [] blockX;			// Block í˜„ì¬ 'X'ìœ„ì¹˜ ì €ì¥
+	int [] blockY;			// Block í˜„ì¬ 'Y'ìœ„ì¹˜ ì €ì¥	
+	int blockpos;			// Block íšŒì „ ëª¨ì–‘ ì§€ì •
+	int score;				// Tetris ì ìˆ˜
+	int delayTime;			// Block ë‚´ë ¤ì˜¤ëŠ” ì†ë„ ì €ì¥
+	boolean bGame;			// Game ì§„í–‰ì—¬ë¶€
+	JLabel strScore;		// ì ìˆ˜
 	
 	public TetrisPanel() {}
 	public TetrisPanel(Color [] c) {
@@ -31,16 +31,16 @@ public class TetrisPanel extends JPanel{
 		strScore = new JLabel("			0");
 		strScore.setBounds(10,320,100,56);
 		
-		strScore.setHorizontalAlignment(JLabel.RIGHT);		// ±Û¾¾ ¿À¸¥ÂÊÀ¸·Î Á¤·Ä
+		strScore.setHorizontalAlignment(JLabel.RIGHT);		// ê¸€ì”¨ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì •ë ¬
 		add(strScore);
-	}	// »ı¼ºÀÚ end
+	}	// ìƒì„±ì end
 	
 	public void initForm() {
-		off = new BufferedImage(15*12+1, 15*21+1, BufferedImage.TYPE_INT_RGB);		// °¡»óÈ­¸é »ı¼º ±×¸²Å©±â(15*15)°³¼ö (12*21)°³¼ö
-		offg=off.getGraphics();		// °¡»óÈ­¸é Graphics Context ¾ò±â
+		off = new BufferedImage(15*12+1, 15*21+1, BufferedImage.TYPE_INT_RGB);		// ê°€ìƒí™”ë©´ ìƒì„± ê·¸ë¦¼í¬ê¸°(15*15)ê°œìˆ˜ (12*21)ê°œìˆ˜
+		offg=off.getGraphics();		// ê°€ìƒí™”ë©´ Graphics Context ì–»ê¸°
 		
-		map = new int[12][21];		// 12*21 map»ı¼º, BlockÀÌ ÀÖÀ¸¸é Block(1-7), ¾øÀ¸¸é 0
-		blockX = new int[4];		// Block ÇöÀçÀ§Ä¡ ÀúÀå
+		map = new int[12][21];		// 12*21 mapìƒì„±, Blockì´ ìˆìœ¼ë©´ Block(1-7), ì—†ìœ¼ë©´ 0
+		blockX = new int[4];		// Block í˜„ì¬ìœ„ì¹˜ ì €ì¥
 		blockY = new int[4];
 		r = new Random();
 		
@@ -50,12 +50,12 @@ public class TetrisPanel extends JPanel{
 	}
 	
 	public void setBlockXY(int type) {
-	  //  Block ¸ğ¾ç ÃÊ±â ÁÂÇ¥	int[8][2][4]
+	  //  Block ëª¨ì–‘ ì´ˆê¸° ì¢Œí‘œ	int[8][2][4]
 		int initData[][][] = {{{0,0,0,0},{0,0,0,0}}, {{6,5,6,7},{0,1,1,1}},
 							  {{7,5,6,7},{0,1,1,1}}, {{5,5,6,7},{0,1,1,1}},
 							  {{5,5,6,6},{0,1,1,2}}, {{6,5,6,5},{0,1,1,2}},
 							  {{4,5,6,7},{0,0,0,0}}, {{5,6,5,6},{0,0,1,1}} };
-	  // Block ¸ğ¾ç ÀúÀå
+	  // Block ëª¨ì–‘ ì €ì¥
 		for(int i=0; i<4; i++) {
 			blockX[i] = initData[type][0][i];
 			blockY[i] = initData[type][1][i];
@@ -64,10 +64,10 @@ public class TetrisPanel extends JPanel{
 	
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawImage(off, 0, 0, this);		// °¡»óÈ­¸éÀ» ½ÇÁ¦ È­¸éÀ¸·Î
+		g.drawImage(off, 0, 0, this);		// ê°€ìƒí™”ë©´ì„ ì‹¤ì œ í™”ë©´ìœ¼ë¡œ
 	} // paint end
 	
-  // Game Over(Á¾·á)½Ã È­¸é¿¡ ³ªÅ¸³ª´Â ¹®±¸
+  // Game Over(ì¢…ë£Œ)ì‹œ í™”ë©´ì— ë‚˜íƒ€ë‚˜ëŠ” ë¬¸êµ¬
 	public void gameOver() {
 		offg.setColor(Color.white);
 		offg.fillRect(35,120,110,70);
@@ -79,7 +79,7 @@ public class TetrisPanel extends JPanel{
 		offg.drawString("Score: " + score, 56, 170);
 	} // gameOver end
 	
- // Game ½ÃÀÛ Àü È­¸é
+ // Game ì‹œì‘ ì „ í™”ë©´
 	public void drawTitle() {
 		offg.setColor(Color.white);
 		offg.fillRect(29,120,123,70);
@@ -91,7 +91,7 @@ public class TetrisPanel extends JPanel{
 		offg.drawString("Press START button!!", 35, 170);
 	} // drawTitle End
 	
- // Block ±×¸®±â
+ // Block ê·¸ë¦¬ê¸°
 	public void dropBlock() {
 		removeBlock();
 		
@@ -107,7 +107,7 @@ public class TetrisPanel extends JPanel{
 		strScore.setText(String.valueOf(score));
 	} // dropBlock end
 	
- // Block ÇÑÁÙ ¿Ï¼º ½Ã ÃÊ±âÈ­ ¹× Block ¼Óµµ Á¶Àı
+ // Block í•œì¤„ ì™„ì„± ì‹œ ì´ˆê¸°í™” ë° Block ì†ë„ ì¡°ì ˆ
 	public void delLine() {
 		boolean delOK;
 		for(int row=20; row>=0; row--) {
@@ -119,28 +119,24 @@ public class TetrisPanel extends JPanel{
 			if(delOK) {
 				score += 10;
 				strScore.setText(String.valueOf(score));
-			  // Á¡¼ö Áõ°¡ ½Ã ºí·° ³»·Á°¡´Â ½Ã°£ °¨¼Ò.
+			  // ì ìˆ˜ ì¦ê°€ ì‹œ ë¸”ëŸ­ ë‚´ë ¤ê°€ëŠ” ì‹œê°„ ê°ì†Œ.
 				if(score<1000) {
 					delayTime = 1000 - score;
 				}else {
 					delayTime = 100;
 				}
-			  // À§¿¡ ÃàÀûµÈ Á¤º¸(ºí·°) ¾Æ·¡·Î ³»¸²
+			  // ìœ„ì— ì¶•ì ëœ ì •ë³´(ë¸”ëŸ­) ì•„ë˜ë¡œ ë‚´ë¦¼
 				for(int delRow=row; delRow>0; delRow--) {
 					for(int delCol=0; delCol<12; delCol++) {
 						map[delCol][delRow] = map[delCol][delRow-1];
 					}
 				}
-			  // ²ËÂù Çà Áö¿ò
-				for(int i=0; i<12; i++) {
-					map[0][i] = 0;
-				}
-				row++; 		// ³»·Á¿Â ºÎºĞ °Ë»çÀ§ÇØ
+				row++; 		// ë‚´ë ¤ì˜¨ Block ì¬ê²€ì‚¬
 			}
 		}
 	} // delLine end
 	
- // ´ÙÀ½ Block ºÎ¿©
+ // ë‹¤ìŒ Block ë¶€ì—¬
 	public void nextBlock() {
 		delLine();
 		blockType = Math.abs(r.nextInt()% 7) + 1;
@@ -149,10 +145,10 @@ public class TetrisPanel extends JPanel{
 		checkGameOver();
 	} //nextBlock end
 	
- // Block Start À§Ä¡¿¡ ºí·°ÀÌ ÀÖ´ÂÁö ¾ø´ÂÁö °Ë»ç
+ // Block Start ìœ„ì¹˜ì— ë¸”ëŸ­ì´ ìˆëŠ”ì§€ ì—†ëŠ”ì§€ ê²€ì‚¬
 	public void checkGameOver() {
 		for(int i=0; i<4; i++) {
-		// Block Start Ÿ¿¡ ºí·°ÀÌ ÀÖÀ¸¸é Game Over 
+		// Block Start ÂŸÂì— ë¸”ëŸ­ì´ ìˆìœ¼ë©´ Game Over 
 			if(map[blockX[i]][blockY[i]] != 0) {
 				bGame = false;
 				gameOver();
@@ -160,21 +156,21 @@ public class TetrisPanel extends JPanel{
 		}
 	} // checkGameOver
 	
- // Block Áö¿ì±â
+ // Block ì§€ìš°ê¸°
 	public void removeBlock() {
 		for(int i=0; i<4; i++) {
 			map[blockX[i]][blockY[i]] = 0;
 		}
 	} // removeBlock end
 	
- // Block ±×¸®±â
+ // Block ê·¸ë¦¬ê¸°
 	public void drawBlock() {
 		for(int i=0; i<4; i++) {
 			map[blockX[i]][blockY[i]] = blockType;
 		}
 	} // drawBlock end
 	
- // map ±×¸®±â
+ // map ê·¸ë¦¬ê¸°
 	public void drawMap() {
 		for(int i=0; i<12; i++) {
 			for(int j=0; j<21; j++) {
@@ -184,7 +180,7 @@ public class TetrisPanel extends JPanel{
 		}
 	} // drawMap end
 	
- // È­¸é¿¡ ¼±±×¸®±â
+ // í™”ë©´ì— ì„ ê·¸ë¦¬ê¸°
 	public void drawGrid() {
 		offg.setColor(new Color(190,190,190));
 		
@@ -195,7 +191,7 @@ public class TetrisPanel extends JPanel{
 		}
 	}	// drawGrid end
 	
- // BlockÀÌ ¾Æ·¡·Î ¿òÁ÷ÀÏ¼ö ÀÖ´ÂÁö °áÁ¤
+ // Blockì´ ì•„ë˜ë¡œ ì›€ì§ì¼ìˆ˜ ìˆëŠ”ì§€ ê²°ì •
 	public boolean checkDrop() {
 		boolean dropOk = true;
 		for(int i = 0; i<4; i++) {
@@ -209,7 +205,7 @@ public class TetrisPanel extends JPanel{
 		return dropOk;
 	} // checkDrop end
 	
- // Block È¸Àü°¡´ÉÇÑÁö °áÁ¤
+ // Block íšŒì „ê°€ëŠ¥í•œì§€ ê²°ì •
 	public boolean checkTurn() {
 		boolean turnOk = true;
 		for(int i=0; i<4; i++) {
@@ -222,7 +218,7 @@ public class TetrisPanel extends JPanel{
 		return turnOk;
 	} // checkTurn end
 	
- // BlockÀÌ ÁÂ,¿ì·Î ¿òÁ÷ÀÏ ¼ö ÀÖ´ÂÁö °áÁ¤
+ // Blockì´ ì¢Œ,ìš°ë¡œ ì›€ì§ì¼ ìˆ˜ ìˆëŠ”ì§€ ê²°ì •
 	public boolean checkMove(int dir) {
 		boolean moveOk = true;
 		removeBlock();
@@ -238,7 +234,7 @@ public class TetrisPanel extends JPanel{
 		return moveOk;
 	} // checkMove end
 	
- // »ó, ÇÏ, ÁÂ, ¿ì Key Event Ã³¸®
+ // ìƒ, í•˜, ì¢Œ, ìš° Key Event ì²˜ë¦¬
 	public void keyPressed(int keyCode) {
 		if(keyCode == KeyEvent.VK_LEFT || keyCode== KeyEvent.VK_A) {
 			if(checkMove(-1)) {
@@ -280,7 +276,7 @@ public class TetrisPanel extends JPanel{
 					blockpos = 0;
 				}
 			}else {
-			 // È¸ÀüÀÌ ºÒ°¡´ÉÇÏ¸é ¿ø À§Ä¡
+			 // íšŒì „ì´ ë¶ˆê°€ëŠ¥í•˜ë©´ ì› ìœ„ì¹˜
 				for(int i=0; i<4; i++) {
 					blockX[i] = tempX[i];
 					blockY[i] = tempY[i];
@@ -294,9 +290,9 @@ public class TetrisPanel extends JPanel{
 		repaint();
 	}
 	
- // Block È¸Àü
+ // Block íšŒì „
 	public void turnBlock(int type) {
-	 // Block È¸Àü ÁÂÇ¥
+	 // Block íšŒì „ ì¢Œí‘œ
 		int turnDataX[][][] = 
 		{	{{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}},
 			{{0,0,0,-1},{-1,1,1,0},{1,0,0,0},{0,-1,-1,1}},
@@ -322,7 +318,7 @@ public class TetrisPanel extends JPanel{
 		}
 	} // turnBlock end
 	
- // Game Á¾·á
+ // Game ì¢…ë£Œ
 	public void gameStop() {
 		bGame = false;
 	} // gameStop end
@@ -332,7 +328,7 @@ public class TetrisPanel extends JPanel{
 		setBlockXY(blockType);
 		System.out.println(blockType);
 		blockpos=0;
-	  // map ÃÊ±âÈ­
+	  // map ì´ˆê¸°í™”
 		for(int i=0; i<12; i++) {
 			for(int j=0; j<21; j++) {
 				map[i][j] = 0;
@@ -354,7 +350,7 @@ public class TetrisPanel extends JPanel{
 		public void run() {
 			while(bGame) {
 				try {
-					Thread.sleep(delayTime);		// Block ¶³¾îÁö´Â ½Ã°£
+					Thread.sleep(delayTime);		// Block ë–¨ì–´ì§€ëŠ” ì‹œê°„
 				}catch(InterruptedException ie) {}
 				dropBlock();
 				drawBlock();
