@@ -2,7 +2,7 @@
 
 Review confusing issues
 
-## Io, Thread, Socket, Component, Graphics, Tetris, DB
+## Io, Thread, Socket, Component, Graphics, Tetris, DB(Access)
 
 ## Tetris Double Game ( 2인용 게임 ) [[코드참조]](https://github.com/malvr00/Java-Study/tree/main/TetrisDoubleGame/src/tetrisDoubleGame)
 * Main Class[[코드]](https://github.com/malvr00/Java-Study/blob/main/TetrisDoubleGame/src/tetrisDoubleGame/TetrisDoubleGame.java)
