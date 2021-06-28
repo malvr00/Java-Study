@@ -12,5 +12,12 @@ Review confusing issues
    <img src="https://user-images.githubusercontent.com/77275513/121775510-22552a00-cbc3-11eb-95c9-a5e05f5e76c3.PNG" width="600px" height="300px" title="100px" alt="RubberDuck"></img><br/>
 
 
-## DB
-> 현재 미완성
+## DB 성적관리 Program
+* Main Class[[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_main.java)
+* TableModel Class [[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_TableMode.java)
+* DB SQL Class[[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_DAO.java)
+> sql 사용시 try catch의 사용빈도를 줄이기 위해서 별도 class 생성
+* Frame Class [[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_Frame.java)
+> Button SQL Event [[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_Frame.java#L323-L460)
+> 
+   <img src="https://user-images.githubusercontent.com/77275513/123629970-ecb17180-d84f-11eb-8d96-27ec83c20ffa.PNG" width="600px" height="300px" title="100px" alt="RubberDuck"></img><br/>
