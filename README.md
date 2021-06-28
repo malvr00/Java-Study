@@ -12,7 +12,7 @@ Review confusing issues
    <img src="https://user-images.githubusercontent.com/77275513/121775510-22552a00-cbc3-11eb-95c9-a5e05f5e76c3.PNG" width="600px" height="300px" title="100px" alt="RubberDuck"></img><br/>
 
 
-## DB 성적관리 Program
+## DB 성적관리 Program [[코드참조]](https://github.com/malvr00/Java-Study/tree/main/DB_main/src/dB_main)
 * Main Class[[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_main.java)
 * TableModel Class [[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_TableMode.java)
 * DB SQL Class[[코드]](https://github.com/malvr00/Java-Study/blob/main/DB_main/src/dB_main/DB_DAO.java)
