@@ -7,13 +7,13 @@ import javax.swing.event.*;
 import java.sql.*;
 
 public class DB_Frame extends JFrame{
-	private DB_DAO stuDB;
-	private DB_TableMode tablemodel;
+	private DB_DAO stuDB;					// sql 처리 class
+	private DB_TableMode tablemodel;		// table class
 	private ResultSet result;
 	private JTable table;
 	private int dataCount, selectedCol, sw = 1;
-	private JTextField tf_Code, tf_name, tf_Kor, tf_Eng, tf_Mat;	// 화면과 Event Handler에 사용
-	private JButton newBt, addBt, updateBt, deleteBt;				// BUtton 사용가능/ 불가능에 사용
+	private JTextField tf_Code, tf_Name, tf_Kor, tf_Eng, tf_Mat;	// 화면과 Event Handler에 사용
+	private JButton newBt, addBt, updateBt, deleteBt;				// Button 사용 가능/ 불가능에 사용
 	
 	public DB_Frame(){}
 	public DB_Frame(DB_DAO db) {
@@ -228,5 +228,234 @@ public class DB_Frame extends JFrame{
 		table.setValueAt(null, row, 6);
 		table.setValueAt(null, row, 7);
 	}  // removeTable end
+	
+  // DdataBase 내용 Table에 출력
+	private void LoadList() {
+	  // 코드순, 성적순 번갈아 나타내기 위하여
+		if(sw == 1)
+			result = stuDB.getResultSet("SELECT * FROM Score ORDER BY strCode");
+		else
+			result = stuDB.getResultSet("SELECT * FROM Score ORDER BY nTotal desc");
+	  // Table의 현재내용 지우기
+		for(int i=0; i<dataCount; i++) {
+			removeTableRow(i);
+		}
+		
+		try {
+			for(dataCount=0; result.next(); dataCount++) {
+				inputTable(dataCount, result.getString("strCode"), result.getString("strName"),result.getInt("nKor"),result.getInt("nMat"),
+						result.getInt("nEng"), result.getInt("nTotal"),result.getDouble("dAverage"),result.getInt("nRank"));
+			}
+			repaint();			// Table 다시 그리기
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	} // LoadList end
+
+  // DB 석차계산
+	private void rank() {
+		int tot=0, rank1 = 0, rank2 = 0;
+		String sql;
+		ResultSet rs = stuDB.getResultSet("SELECT * FROM Score ORDER BY nTotal desc");
+		try {
+			while(rs.next()) {
+				rank1++;
+				if(tot != rs.getInt("nTotal")) {		// 이전 점수와 현재 점수를 비교하여 다르면
+					tot = rs.getInt("nTotal");			// 현재점수를 tot변수에 옮겨서 다음 비교할 때 사용
+					rank2 = rank1;						// 등수도 계속 누적한 등수사용
+				}
+				sql = "UPDATE Score Set nRank="+ rank2 + " WHERE strCode ='"+ rs.getString("strCode") + "'";
+				stuDB.Excute(sql);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	} // rank end
+	
+  // 선택된 JTable 내용을 JTextField로 보내는 함수
+	public void MoveData() {
+		try {
+			String hakBun = result.getString("strCode");
+			String name = result.getString("strName");
+			String kor = String.valueOf(result.getInt("nKor"));
+			String eng = String.valueOf(result.getInt("nEng"));
+			String mat = String.valueOf(result.getInt("nMat"));
+			tf_Code.setText(hakBun);
+			tf_Name.setText(name);
+			tf_Kor.setText(kor);
+			tf_Mat.setText(eng);
+			tf_Eng.setText(mat);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	} // MoveData end
+	
+  // Table Event
+	class tableListener implements ListSelectionListener{		// Event 2번 발생
+		public void valueChanged(ListSelectionEvent e) {
+			if(e.getValueIsAdjusting())							// Event 2번 발생, 추가 메세지 무시
+				return;
+			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+			if(lsm.isSelectionEmpty())
+				System.out.println("No columns are selected");
+			else {
+				selectedCol = lsm.getMinSelectionIndex();		// 선택한 인덱스를 반환 or 비어있으면 -1 반환
+				if(selectedCol >= dataCount)
+					System.out.println("data is Empty");
+				else {
+					tf_Code.setText(table.getValueAt(selectedCol,  0).toString());
+					tf_Name.setText(table.getValueAt(selectedCol, 1).toString());
+					tf_Kor.setText(table.getValueAt(selectedCol,  2).toString());
+					tf_Mat.setText(table.getValueAt(selectedCol,  3).toString());
+					tf_Eng.setText(table.getValueAt(selectedCol,  4).toString());
+					try {
+						result.absolute(selectedCol+1);		// 지정한 위치로 cursor 이동
+						MoveData();
+					}catch(Exception e1) {
+						e1.printStackTrace();
+					}
+					repaint();
+				}
+			}
+		}
+	} // tableListener end
+	
+  // newButton Event
+	class newButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			tf_Code.setText(null);
+			tf_Name.setText(null);
+			tf_Kor.setText(null);
+			tf_Mat.setText(null);
+			tf_Eng.setText(null);
 			
-}
+			setEnabledButton(false);
+		}
+	} // newButtonListener end
+	
+  // addButton Event
+	class addButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			String sql;
+			if(tf_Code.getText().isEmpty()) {
+				System.out.println("번호가 입력되지 않았습니다.");
+				return;
+			}
+			int total;
+			total = Integer.parseInt(tf_Kor.getText()) + Integer.parseInt(tf_Mat.getText()) + Integer.parseInt(tf_Eng.getText());
+			sql = "INSERT INTO Score(strCode, strName, nKor, nMat, nEng, nTotal, dAverage) VALUES('" + tf_Code.getText() + "','" + 
+					tf_Name.getText() + "'," + tf_Kor.getText() + "," + tf_Eng.getText() + "," + tf_Mat.getText() + ","
+					+ Integer.toString(total) + "," + Double.toString(total/3.0) + ")";
+			System.out.println(sql);			// sql확인, 화면에 출력
+			
+			stuDB.Excute(sql);
+			rank();
+			LoadList();
+			setEnabledButton(true);
+		}
+	} // addButtonListener end
+	
+  // updateButton Event
+	class updateButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			String sql, code;
+			if(selectedCol == -1) {
+				System.out.println("변결할 셀이 선택되지 않았습니다.");
+				return;
+			}
+			code = table.getValueAt(selectedCol, 0).toString();
+			int total = Integer.parseInt(tf_Kor.getText()) + Integer.parseInt(tf_Mat.getText()) + Integer.parseInt(tf_Eng.getText());
+			sql = "UPDATE Score SET strName ='" + tf_Name.getText() + " ', nKor=" + tf_Kor.getText() + ", nMat=" + tf_Mat.getText() + ", nEng=" + 
+			tf_Eng.getText() + ", nTotal=" + Integer.toString(total) + ", dAverage=" + Double.toString(total/3.0) + " WHERE strCode = '" + code + "'";
+			
+			System.out.println(sql);
+			stuDB.Excute(sql);
+			rank();
+			LoadList();
+		}
+	} // updateButtonListener end
+	
+  // Delete Event 
+	class deleteButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			String sql, code;
+			if(selectedCol == -1) {
+				System.out.println("삭제할 셀이 선택되지 않았습니다.");
+				return;
+			}
+			code = table.getValueAt(selectedCol, 0).toString();
+			sql = "DELETE FROM Score WHERE strCode ='" + code + "'";
+			stuDB.Excute(sql);
+			rank();
+			LoadList();
+		}
+	} // deleteButtonListener end
+	
+  // FirstButtonListener Event
+	class FirstButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			try {
+				result.first();
+			}catch(SQLException e1) {
+				System.err.println("SQLEXception " + e1.getMessage());
+			}
+		}
+	} // FirstButtonListener end
+	
+  // Previous Event
+	class PreviousButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			try {
+				result.previous();
+				if(result.isBeforeFirst())
+					result.first();
+			}catch(SQLException e1) {
+				System.err.println("SQLException" + e1.getMessage());
+			}
+			MoveData();
+		}
+	} // PreviousButtonListener end
+	
+  // Next Event
+	class NextButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			try {
+				result.next();
+				if(result.isAfterLast()) {
+					result.last();
+				}
+			}catch(SQLException e1) {
+				System.err.println("SQLException" + e1.getMessage());
+			}
+			MoveData();
+		}
+	} // NextButtonListenet end
+	
+  // End Event
+	class EndButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			try {
+				result.last();
+			}catch(SQLException e1) {
+				System.err.println("SQLException" + e1.getMessage());
+			}
+			MoveData();
+		}
+	} // EndButtonListener end
+	
+  // Sort Evnet
+	class sortButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			sw *= -1;
+			LoadList();
+		}
+	} // sortButtonListener end
+	
+  // end Event
+	class exitButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			stuDB.Close();
+			System.exit(0);
+		}
+	} // exitButtonListener end
+} // DB_FrameEnd
